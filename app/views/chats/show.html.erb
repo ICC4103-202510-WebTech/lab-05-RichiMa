@@ -1,0 +1,5 @@
+<h1><%= "Sender id: #{@chat.sender_id}" %></h1>
+<h2><%= "Receiver_id: #{@chat.receiver_id}" %></h2> 
+<h3>Timestamps: <%= "#{@chat.created_at} #{@chat.updated_at}" %></h3>
+
+<%= link_to "Volver", chats_path %>

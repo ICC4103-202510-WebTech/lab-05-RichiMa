@@ -1,0 +1,6 @@
+<h1><%= "#{@message.chat_id} #{@message.user_id}" %></h1>
+<h2><%= @message.body %></h2>
+<h3>Timestamps: <%= "#{@message.created_at} #{@message.updated_at}" %></h3>
+
+<%= link_to "Volver", messages_path %>
+

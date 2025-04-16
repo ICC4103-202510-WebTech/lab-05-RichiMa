@@ -1,0 +1,7 @@
+<h1>Messages</h1>
+<ul>
+<% @messages.each do |message| %>
+    <li>
+      <%= link_to "#{message.chat_id} #{message.user_id} #{message.body} #{message.created_at} #{message.updated_at}", message_path(message) %>
+    </li>
+  <% end %>
