@@ -6,4 +6,9 @@
       <%= link_to "#{user.first_name} #{user.last_name} #{user.email} #{user.created_at} #{user.updated_at}", user_path(user) %>
     </li>
   <% end %>
+  <%= link_to 'New User', new_user_path %>
+  <%= link_to 'New Chat', new_chat_path %>
+  <%= link_to 'New Message', new_message_path %>
+
+
 </ul>

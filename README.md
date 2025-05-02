@@ -1,50 +1,66 @@
-# lab-06  
 
-**Create basic views for your models**
+# lab-07  
+**Add associations and new record forms**
 
-In this evaluation, you will add basic views to your Whats New application using Ruby on Rails.
+In this lab, you will define associations between your existing models and create views that allow users to add new records through forms.
 
 ---
 
 ## Instructions
 
-Work on the same repository as the last laboratory session so you can have the code you already generated for the models.
+### 1. Add associations to your models
 
-### 1. Create views for your models
+Update your models to define the following relationships:
 
-Using the models created in **lab-05**, you will now implement the basic **index** and **show** views for each one.
+- A `User` can send many `Messages`  
+- A `User` can receive many `Messages` through `Chats`  
+- A `Chat` has many `Messages`  
+- A `Message` belongs to a `Chat`  
+- A `Message` belongs to a `User`  
+- A `Chat` belongs to a sender (`User`) and a receiver (`User`)
 
-You must create views for the following models:
+Use the correct `has_many`, `belongs_to` and, when necessary, the `class_name` and `foreign_key` options in your models.
 
-- `User`
-- `Chat`
-- `Message`
-
----
-
-### 1.1 Index views
-
-For each model, create an `index` view that:
-
-- Lists all the records of the model
-- Shows the values of all attributes in a table format
-- Includes a link to see each individual record (`show` view)
+> 💡 Make sure to validate that all associations are working properly using the Rails console.
 
 ---
 
-### 1.2 Show views
+### 2. Add validations
 
-For each model, create a `show` view that:
+Update your models to include the following validations:
 
-- Displays all the attribute values of a single instance
-- Includes a link to go back to the index view
+- `User`:
+  - `email` must be **present** and **unique**
+- `Message`:
+  - `body` must be **present**
+- `Chat`:
+  - `sender_id` and `receiver_id` must be **present**
+  - The `sender` and `receiver` must be **different users**
 
-> 💡 Example: In `app/views/users/show.html.erb`, display the full name and email of the user.
+Make sure validation errors are displayed in the form views when a record is not valid.
 
 ---
 
-You can use plain HTML and embedded Ruby (`.html.erb`). You are not expected to use CSS or any frontend framework at this point.
+### 3. Create forms to add new records
 
-### 2. Add a navigation bar
+For each model, create a `new` view and corresponding `create` action in the controller.
 
-Using Bootstrap add a navigation bar at the top of the page. This should be displayed in all pages of the app, for this you should use rails partials (https://guides.rubyonrails.org/layouts_and_rendering.html#using-partials)
+You must implement a form for each of the following:
+
+- `User`: A basic form with first name, last name, and email.
+- `Chat`: A form where you select a sender and a receiver from existing users.
+- `Message`: A form where you select the associated chat, the author (user), and enter the message body.
+
+Use `form_with` and select dropdowns (`f.select`) where necessary.
+
+> 💡 Example: In `app/views/messages/new.html.erb`, the form should let you choose a chat, a user, and write the message body.
+
+---
+
+### 4. Add navigation links
+
+Add links in your index and show views to navigate to the `new` forms for each model. For example, from `users/index.html.erb`, include a link to "Add new user".
+
+---
+
+You are encouraged to test your forms, validations, and associations using both the browser and the Rails console.

@@ -5,3 +5,7 @@
       <%= link_to "#{message.chat_id} #{message.user_id} #{message.body} #{message.created_at} #{message.updated_at}", message_path(message) %>
     </li>
   <% end %>
+
+  <%= link_to 'New User', new_user_path %>
+  <%= link_to 'New Chat', new_chat_path %>
+  <%= link_to 'New Message', new_message_path %>
