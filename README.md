@@ -1,66 +1,67 @@
+# lab-08
 
-# lab-07  
-**Add associations and new record forms**
+**Edit and update existing records + display associated data**
 
-In this lab, you will define associations between your existing models and create views that allow users to add new records through forms.
+In this lab, you will add functionality to edit existing records through forms and display related data between your models.
 
 ---
 
 ## Instructions
 
-### 1. Add associations to your models
+### 1. Add `edit` and `update` actions
 
-Update your models to define the following relationships:
+For each of the following models, implement the `edit` and `update` actions in the controller and views:
 
-- A `User` can send many `Messages`  
-- A `User` can receive many `Messages` through `Chats`  
-- A `Chat` has many `Messages`  
-- A `Message` belongs to a `Chat`  
-- A `Message` belongs to a `User`  
-- A `Chat` belongs to a sender (`User`) and a receiver (`User`)
+- `User`
+- `Chat`
+- `Message`
 
-Use the correct `has_many`, `belongs_to` and, when necessary, the `class_name` and `foreign_key` options in your models.
+Each `edit` view should include a form that allows updating all the editable attributes of the record.
 
-> 💡 Make sure to validate that all associations are working properly using the Rails console.
+> 💡 Use `form_with model:` to reuse the same form structure as in the `new` views.
 
 ---
 
-### 2. Add validations
+### 2. Display associated records in the `show` views
 
-Update your models to include the following validations:
+Update the `show` views for each model to include information from their related models:
 
-- `User`:
-  - `email` must be **present** and **unique**
-- `Message`:
-  - `body` must be **present**
-- `Chat`:
-  - `sender_id` and `receiver_id` must be **present**
-  - The `sender` and `receiver` must be **different users**
+- `User#show`: Show a list of all chats the user participates in and messages they have sent.
+- `Chat#show`: Display the sender and receiver names, and list all messages in the chat.
+- `Message#show`: Show the associated user and chat.
 
-Make sure validation errors are displayed in the form views when a record is not valid.
+Use embedded Ruby and basic HTML lists or tables.
 
 ---
 
-### 3. Create forms to add new records
+### 3. Add validations to update forms
 
-For each model, create a `new` view and corresponding `create` action in the controller.
+Ensure that validation errors are shown when updating records. For example:
 
-You must implement a form for each of the following:
+- If a user tries to save an email that is already taken
+- If a message is submitted with an empty body
 
-- `User`: A basic form with first name, last name, and email.
-- `Chat`: A form where you select a sender and a receiver from existing users.
-- `Message`: A form where you select the associated chat, the author (user), and enter the message body.
-
-Use `form_with` and select dropdowns (`f.select`) where necessary.
-
-> 💡 Example: In `app/views/messages/new.html.erb`, the form should let you choose a chat, a user, and write the message body.
+Use `model.errors.full_messages` to display errors near the form.
 
 ---
 
-### 4. Add navigation links
+### 4. Add links for editing
 
-Add links in your index and show views to navigate to the `new` forms for each model. For example, from `users/index.html.erb`, include a link to "Add new user".
+In each index and show view, add links to edit the record:
+
+- Example: In `users/show.html.erb`, include a link to "Edit user".
+- Example: In `messages/index.html.erb`, include a link next to each message to "Edit message".
+
+Use `link_to` helpers with `edit_*_path`.
 
 ---
 
-You are encouraged to test your forms, validations, and associations using both the browser and the Rails console.
+### 5. (Bonus) Display message counts
+
+As a bonus, display the number of messages sent by each user in `users/index.html.erb`.
+
+> 💡 Use Active Record associations and the `.count` method to achieve this.
+
+---
+
+Test your implementation using both the Rails console and the browser. Make sure all forms and links work correctly and validations behave as expected.

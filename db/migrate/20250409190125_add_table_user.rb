@@ -8,3 +8,4 @@ class AddTableUser < ActiveRecord::Migration[8.0]
     end
   end
 end
+
