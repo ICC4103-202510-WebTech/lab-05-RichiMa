@@ -2,4 +2,70 @@
 <h2>Email: <%= @user.email %></h2>
 <h3>Timestamps: <%= "#{@user.created_at} #{@user.updated_at}" %></h3>
 
-<%= link_to "Volver", users_path %>
+
+
+<%= link_to "Volver", users_path %> 
+<%= link_to 'Edit', edit_user_path(@user) %>
+
+<h1><%= @user.first_name %> <%= @user.last_name %></h1>
+<p><strong>Email:</strong> <%= @user.email %></p>
+
+<h2>Chats</h2>
+<% 
+  # Get all chats where the user is either sender or receiver
+  user_chats = @user.sent_chats + @user.received_chats
+%>
+<% if user_chats.any? %>
+  <ul>
+    <% user_chats.each do |chat| %>
+      <li>
+        Chat with 
+        <% other_user = chat.sender_id == @user.id ? chat.receiver : chat.sender %>
+        <%= other_user.first_name %> <%= other_user.last_name %> 
+        (<%= link_to 'View Chat', chat_path(chat) %>)
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No chats yet.</p>
+<% end %>
+
+<h2>Messages</h2>
+<% # Get all messages sent by this user directly, without going through chats
+   user_messages = Message.where(user_id: @user.id)
+%>
+<% if user_messages.any? %>
+  <table border="1">
+    <thead>
+      <tr>
+        <th>Chat</th>
+        <th>Content</th>
+        <th>Sent At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% user_messages.each do |message| %>
+        <tr>
+          <td>
+            <% 
+              chat = message.chat
+              other_user = chat.sender_id == @user.id ? chat.receiver : chat.sender 
+            %>
+            Chat with <%= other_user.first_name %> <%= other_user.last_name %>
+          </td>
+          <td><%= message.body %></td>
+          <td><%= message.created_at.strftime("%b %d, %Y at %H:%M") %></td>
+          <td><%= link_to 'View', message_path(message) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No messages yet.</p>
+<% end %>
+
+<div>
+  <%= link_to 'Edit', edit_user_path(@user) %> |
+  <%= link_to 'Back', users_path %>
+</div>

@@ -1,11 +1,15 @@
 <h1>Messages</h1>
-<ul>
-<% @messages.each do |message| %>
-    <li>
-      <%= link_to "#{message.chat_id} #{message.user_id} #{message.body} #{message.created_at} #{message.updated_at}", message_path(message) %>
-    </li>
-  <% end %>
 
-  <%= link_to 'New User', new_user_path %>
-  <%= link_to 'New Chat', new_chat_path %>
-  <%= link_to 'New Message', new_message_path %>
+<% @messages.each do |message| %>
+  <p>
+    <strong>Body:</strong> <%= message.body %><br>
+    <strong>Chat:</strong> <%= link_to "Chat ##{message.chat_id}", chat_path(message.chat) %><br>
+    <strong>User:</strong> <%= link_to "#{message.user.first_name} #{message.user.last_name}", user_path(message.user) %><br>
+
+    <%= link_to 'Edit', edit_message_path(message) %> |
+    <%= link_to 'Show', message_path(message) %>
+  </p>
+<% end %>
+
+<%= link_to 'New Chat', new_chat_path %>
+<%= link_to 'New Message', new_message_path %>

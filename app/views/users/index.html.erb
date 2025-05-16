@@ -3,12 +3,13 @@
 <ul>
   <% @users.each do |user| %>
     <li>
-      <%= link_to "#{user.first_name} #{user.last_name} #{user.email} #{user.created_at} #{user.updated_at}", user_path(user) %>
+      <%= user.first_name %> <%= user.last_name %> - <%= user.email %><br>
+      
+      <%= link_to 'Show', user_path(user) %> |
+      <%= link_to 'Edit', edit_user_path(user) %>
     </li>
+    <hr>
   <% end %>
-  <%= link_to 'New User', new_user_path %>
-  <%= link_to 'New Chat', new_chat_path %>
-  <%= link_to 'New Message', new_message_path %>
-
-
 </ul>
+
+<%= link_to 'New User', new_user_path %>

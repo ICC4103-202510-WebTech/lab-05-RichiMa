@@ -1,13 +1,14 @@
 <h1>Chats</h1>
-<ul>
-    <% @chats.each do |chat| %>
-        <li>
-            <%= link_to"#{chat.sender_id} #{chat.receiver_id} #{chat.created_at} #{chat.updated_at}", chat_path(chat) %>
 
-        </li>
-        <% end %>
-  <%= link_to 'New User', new_user_path %>
-  <%= link_to 'New Chat', new_chat_path %>
-  <%= link_to 'New Message', new_message_path %>
+<ul>
+  <% @chats.each do |chat| %>
+    <li>
+      Chat between <%= chat.sender_id %> and <%= chat.receiver_id %><br>
+      <%= link_to 'Show', chat_path(chat) %> |
+      <%= link_to 'Edit', edit_chat_path(chat) %>
+    </li>
+  <% end %>
 </ul>
 
+<%= link_to 'New Chat', new_chat_path %> |
+<%= link_to 'New Message', new_message_path %>

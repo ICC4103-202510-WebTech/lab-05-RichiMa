@@ -1,5 +1,49 @@
-<h1><%= "Sender id: #{@chat.sender_id}" %></h1>
-<h2><%= "Receiver_id: #{@chat.receiver_id}" %></h2> 
-<h3>Timestamps: <%= "#{@chat.created_at} #{@chat.updated_at}" %></h3>
+<h1>Chat</h1>
 
-<%= link_to "Volver", chats_path %>
+<p>
+  <strong>Between:</strong>
+  <%= link_to "#{@chat.sender.first_name} #{@chat.sender.last_name}", user_path(@chat.sender) %>
+  and
+  <%= link_to "#{@chat.receiver.first_name} #{@chat.receiver.last_name}", user_path(@chat.receiver) %>
+</p>
+
+<h2>Messages</h2>
+<% if @chat.messages.any? %>
+  <div class="messages">
+    <% @chat.messages.order(created_at: :asc).each do |message| %>
+      <div class="message" style="margin-bottom: 15px; <%= message.user == @chat.sender ? 'text-align: left;' : 'text-align: right;' %>">
+        <div style="font-weight: bold;">
+          <%= message.user.first_name %> <%= message.user.last_name %>:
+        </div>
+        <div style="background-color: <%= message.user == @chat.sender ? '#f1f1f1' : '#e3f2fd' %>; padding: 10px; border-radius: 10px; display: inline-block;">
+          <%= message.body %>
+        </div>
+        <div style="font-size: 12px; color: #777;">
+          <%= message.created_at.strftime("%b %d, %Y at %H:%M") %>
+          (<%= link_to 'View', message_path(message) %>)
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p>No messages in this chat yet.</p>
+<% end %>
+
+<h3>Add a New Message</h3>
+<%= form_with(model: Message.new, local: true) do |form| %>
+  <%= form.hidden_field :chat_id, value: @chat.id %>
+  <%= form.hidden_field :user_id, value: @chat.sender.id %> <!-- no supe como hacerlo sin esto :(  -->
+
+  <div class="field">
+    <%= form.label :body %>
+    <%= form.text_area :body, rows: 3 %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Send Message" %>
+  </div>
+<% end %>
+
+<div>
+  <%= link_to 'Volver', chats_path %>
+</div>
