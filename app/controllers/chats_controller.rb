@@ -45,4 +45,3 @@ class ChatsController < ApplicationController
       params.require(:chat).permit(:sender_id, :receiver_id)
     end
   end
-  

@@ -1,67 +1,125 @@
-# lab-08
+# lab-09
 
-**Edit and update existing records + display associated data**
+**Add authentication and authorization**
 
-In this lab, you will add functionality to edit existing records through forms and display related data between your models.
+In this lab, you will add user authentication to your Rails application using the Devise gem, and implement basic authorization using CanCanCan to control which users can perform certain actions.
 
 ---
 
 ## Instructions
 
-### 1. Add `edit` and `update` actions
+### 1. Add Devise to your application
 
-For each of the following models, implement the `edit` and `update` actions in the controller and views:
+1. Add the `devise` gem to your Gemfile and install it:
 
-- `User`
-- `Chat`
-- `Message`
+   ```bash
+   bundle add devise
+   bin/rails generate devise:install
+   ```
 
-Each `edit` view should include a form that allows updating all the editable attributes of the record.
+2. Enable Devise for your existing `User` model:
 
-> 💡 Use `form_with model:` to reuse the same form structure as in the `new` views.
+   ```bash
+   bin/rails generate devise User
+   ```
 
----
+   This will update the model and create a migration to add the required authentication fields.
 
-### 2. Display associated records in the `show` views
+3. Run the migration:
 
-Update the `show` views for each model to include information from their related models:
+   ```bash
+   bin/rails db:migrate
+   ```
 
-- `User#show`: Show a list of all chats the user participates in and messages they have sent.
-- `Chat#show`: Display the sender and receiver names, and list all messages in the chat.
-- `Message#show`: Show the associated user and chat.
+4. Update your application layout to show links to **Sign in**, **Sign out**, and **Sign up**, depending on whether a user is signed in.
 
-Use embedded Ruby and basic HTML lists or tables.
-
----
-
-### 3. Add validations to update forms
-
-Ensure that validation errors are shown when updating records. For example:
-
-- If a user tries to save an email that is already taken
-- If a message is submitted with an empty body
-
-Use `model.errors.full_messages` to display errors near the form.
+   > 💡 Use `user_signed_in?`, `current_user`, and `destroy_user_session_path` to conditionally show navigation options.
 
 ---
 
-### 4. Add links for editing
+### 2. Protect access with authentication
 
-In each index and show view, add links to edit the record:
+Use `before_action :authenticate_user!` in your controllers to restrict access to authenticated users.
 
-- Example: In `users/show.html.erb`, include a link to "Edit user".
-- Example: In `messages/index.html.erb`, include a link next to each message to "Edit message".
+Example:
 
-Use `link_to` helpers with `edit_*_path`.
+```ruby
+class MessagesController < ApplicationController
+  before_action :authenticate_user!
+  ...
+end
+```
 
----
-
-### 5. (Bonus) Display message counts
-
-As a bonus, display the number of messages sent by each user in `users/index.html.erb`.
-
-> 💡 Use Active Record associations and the `.count` method to achieve this.
+> 💡 You can skip authentication for public pages if needed (e.g., a welcome page).
 
 ---
 
-Test your implementation using both the Rails console and the browser. Make sure all forms and links work correctly and validations behave as expected.
+### 3. Add CanCanCan for authorization
+
+1. Add the `cancancan` gem to your Gemfile:
+
+   ```bash
+   bundle add cancancan
+   ```
+
+2. Generate the `Ability` class:
+
+   ```bash
+   bin/rails generate cancan:ability
+   ```
+
+3. Define basic permissions. For example:
+
+   ```ruby
+   class Ability
+     include CanCan::Ability
+
+     def initialize(user)
+       return unless user.present?
+
+       can :read, :all
+       can :create, Message
+       can [:update, :destroy], Message, user_id: user.id
+     end
+   end
+   ```
+
+4. In your controllers, use `authorize!` or `load_and_authorize_resource` to enforce permissions.
+
+   > 💡 Example: Only allow users to edit or delete their own messages.
+
+---
+
+### 4. Adjust your views and UI
+
+- Show or hide buttons based on user permissions (e.g., only show "Edit" or "Delete" if the user has access).
+- Use the `can?` helper in views:
+
+   ```erb
+   <% if can? :edit, @message %>
+     <%= link_to "Edit", edit_message_path(@message) %>
+   <% end %>
+   ```
+
+---
+
+### 5. (Optional Bonus) Customize Devise views
+
+If you want to personalize the login/signup experience:
+
+```bash
+bin/rails generate devise:views
+```
+
+You can then edit the HTML in `app/views/devise/` to fit your application.
+
+---
+
+## Final Test
+
+Log in with different users and verify that:
+
+- Authentication is required to access protected pages
+- Authorization rules are correctly applied (e.g., users cannot edit or delete messages they do not own)
+- The UI reflects permissions appropriately
+```
