@@ -5,9 +5,10 @@
     <strong>Body:</strong> <%= message.body %><br>
     <strong>Chat:</strong> <%= link_to "Chat ##{message.chat_id}", chat_path(message.chat) %><br>
     <strong>User:</strong> <%= link_to "#{message.user.first_name} #{message.user.last_name}", user_path(message.user) %><br>
-
-    <%= link_to 'Edit', edit_message_path(message) %> |
-    <%= link_to 'Show', message_path(message) %>
+    
+    <% if can? :edit, message %>
+      <%= link_to 'Edit', edit_message_path(message), class: 'btn btn-sm btn-outline-secondary' %>
+    <% end %>    <%= link_to 'Show', message_path(message) %>
   </p>
 <% end %>
 

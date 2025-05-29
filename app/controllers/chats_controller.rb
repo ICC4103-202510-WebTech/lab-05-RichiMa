@@ -1,12 +1,14 @@
 class ChatsController < ApplicationController
-    
+    before_action :authenticate_user!
+
     def index
-      @chats = Chat.all
+      @chats = Chat.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id)
     end
   
     def show 
       @chat = Chat.find(params[:id])
       @messages = @chat.messages
+      authorize! :read, @chat
     end
   
     def new

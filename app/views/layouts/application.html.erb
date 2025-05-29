@@ -7,6 +7,8 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
+    <%= csrf_meta_tags %>
 
     <%= yield :head %>
 
@@ -23,7 +25,11 @@
   </head>
 
   <body>
-    <%= render 'layouts/navbar' %>
+    <%= render 'layouts/messages' %>
+    <% if user_signed_in? %>
+      <%= render 'layouts/navbar' %>
+    <% end %>      
     <%= yield %>
+
   </body>
 </html>
