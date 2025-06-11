@@ -17,6 +17,7 @@ class Ability
     can :read, Chat do |chat|
       chat.sender_id == user.id || chat.receiver_id == user.id
     end
+    can :create, Chat
     
     # The first argument to `can` is the action you are giving the user
     # permission to do.

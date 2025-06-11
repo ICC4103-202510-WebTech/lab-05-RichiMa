@@ -1,8 +1,8 @@
 class ChatsController < ApplicationController
     before_action :authenticate_user!
-
+    load_and_authorize_resource
     def index
-      @chats = Chat.where("sender_id = ? OR receiver_id = ?", current_user.id, current_user.id)
+      @chats = Chat.for_user(current_user)
     end
   
     def show 

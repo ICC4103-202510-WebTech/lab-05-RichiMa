@@ -1,14 +1,11 @@
-<h1>Chats</h1>
+<h1>My Inbox</h1>
 
 <ul>
-<% @chats.each do |chat| %>
-  <% if can? :read, chat %>
+  <% @chats.each do |chat| %>
     <li>
-      Chat between <%= chat.sender.email %> and <%= chat.receiver.email %><br>
-      <%= link_to 'Show', chat_path(chat) %>
+      Chat with <%= link_to chat.other_participant(current_user).email, chat_path(chat) %>
     </li>
   <% end %>
-<% end %>
 </ul>
 
 <%= link_to 'New Chat', new_chat_path %>
